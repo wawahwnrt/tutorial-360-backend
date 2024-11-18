@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using tutorial_backend_dotnet.Data;
 using tutorial_backend_dotnet.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace tutorial_backend_dotnet.Repositories
 {
@@ -15,36 +16,40 @@ namespace tutorial_backend_dotnet.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<TutorialGroup>> GetAllTutorialGroups()
+        public async Task<IEnumerable<TutorialGroup>> GetAllActiveGroups()
         {
-            return await _context.TutorialGroups.ToListAsync();
+            return await _context.TutorialGroups.Where(g => g.IsActive).OrderBy(g => g.StepGroupId).ToListAsync();
         }
 
-        public async Task<TutorialGroup> GetTutorialGroupByName(string name)
+        public async Task<IEnumerable<ActiveTutorialGroup>> GetGroupsByRole(int roleId)
         {
-            return await _context.TutorialGroups.FindAsync(name);
-        }
+            var groups = await GetAllActiveGroups();
 
-        public async Task AddTutorialGroup(TutorialGroup group)
-        {
-            await _context.TutorialGroups.AddAsync(group);
-            await _context.SaveChangesAsync();
+            return (from @group in groups
+                where @group.RoleId.Contains(roleId)
+                select new ActiveTutorialGroup
+                {
+                    StepGroupId = @group.StepGroupId,
+                    RoleId = @group.RoleId,
+                    StepGroupName = @group.StepGroupName,
+                    StepGroupDescription = @group.StepGroupDescription
+                }).ToList();
         }
-
-        public async Task UpdateTutorialGroup(TutorialGroup group)
+        
+        public async Task<IEnumerable<ActiveTutorialGroupWithSteps>> GetAllActiveTutorials(int roleId)
         {
-            _context.TutorialGroups.Update(group);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteTutorialGroup(string name)
-        {
-            var group = await _context.TutorialGroups.FindAsync(name);
-            if (group != null)
-            {
-                _context.TutorialGroups.Remove(group);
-                await _context.SaveChangesAsync();
-            }
+            var groups = await GetAllActiveGroups();
+            var tutorialSteps = await new TutorialStepRepository(_context).GetStepsByRole(roleId);
+            
+            return (from @group in groups
+                select new ActiveTutorialGroupWithSteps
+                {
+                    StepGroupId = @group.StepGroupId,
+                    RoleId = @group.RoleId,
+                    StepGroupName = @group.StepGroupName,
+                    StepGroupDescription = @group.StepGroupDescription,
+                    TutorialSteps = tutorialSteps.Where(step => step.StepGroupName == @group.StepGroupName).ToList()
+                }).ToList();
         }
     }
 }

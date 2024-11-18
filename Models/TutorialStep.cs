@@ -37,4 +37,56 @@ namespace tutorial_backend_dotnet.Models
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; }
     }
+    
+    public class ActiveTutorialStep : TutorialStep
+    {
+        [Key]
+        [Column("step_id")]
+        public int StepId { get; set; }
+
+        [Column("role_id")]
+        public int RoleId { get; set; }
+
+        [Column("step_order")]
+        public int StepOrder { get; set; }
+
+        [Column("step_group_name")]
+        public string StepGroupName { get; set; }
+
+        [Column("step_name")]
+        public string StepName { get; set; }
+
+        [Column("step_description")]
+        public string StepDescription { get; set; }
+
+        [Column("step_page")]
+        public string StepPage { get; set; }
+    }
+    
+    public class TutorialStepStatus : TutorialStep
+    {
+        [Key]
+        [Column("step_id")]
+        public int StepId { get; set; }
+
+        [Column("role_id")]
+        public int RoleId { get; set; }
+
+        [Column("step_group_name")]
+        public string StepGroupName { get; set; }
+
+        [Column("step_order")]
+        public int StepOrder { get; set; }
+
+        [Column("step_name")]
+        public string StepName { get; set; }
+
+        [Column("step_description")]
+        public string StepDescription { get; set; }
+
+        [Column("step_page")]
+        public string StepPage { get; set; }
+
+        public bool IsCompleted { get; set; }
+    }
 }

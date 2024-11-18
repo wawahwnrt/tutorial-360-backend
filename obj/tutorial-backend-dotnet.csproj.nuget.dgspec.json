@@ -13,6 +13,7 @@
         "packagesPath": "C:\\Users\\wwhh_\\.nuget\\packages\\",
         "outputPath": "E:\\wawahwnrt\\BUILK\\tutorial-backend-dotnet\\obj\\",
         "projectStyle": "PackageReference",
+        "UsingMicrosoftNETSdk": false,
         "configFilePaths": [
           "C:\\Users\\wwhh_\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
