@@ -24,6 +24,8 @@ namespace tutorial_backend_dotnet
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<ITutorialGroupRepository, TutorialGroupRepository>();
+            services.AddScoped<ITutorialStepRepository, TutorialStepRepository>();
+            services.AddScoped<IUserTutorialProgressRepository, UserTutorialProgressRepository>();
 
             services.AddControllers();
 
