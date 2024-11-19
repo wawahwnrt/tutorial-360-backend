@@ -38,18 +38,32 @@ namespace tutorial_backend_dotnet.Repositories
         
         public async Task<IEnumerable<ActiveTutorialGroupWithSteps>> GetAllActiveTutorials(int roleId)
         {
-            var groups = await GetAllActiveGroups();
             var tutorialSteps = await new TutorialStepRepository(_context).GetStepsByRole(roleId);
+            var result = new List<ActiveTutorialGroupWithSteps>();
+            var activeGroups = await GetGroupsByRole(roleId);
             
-            return (from @group in groups
-                select new ActiveTutorialGroupWithSteps
-                {
-                    StepGroupId = @group.StepGroupId,
-                    RoleId = @group.RoleId,
-                    StepGroupName = @group.StepGroupName,
-                    StepGroupDescription = @group.StepGroupDescription,
-                    TutorialSteps = tutorialSteps.Where(step => step.StepGroupName == @group.StepGroupName).ToList()
-                }).ToList();
+            //  foreach (var group in activeGroups)
+            // {
+            //     var steps = tutorialSteps.Where(ts => ts.StepGroupName == group.StepGroupName).ToList();
+            //     result.Add(new ActiveTutorialGroupWithSteps
+            //     {
+            //         StepGroupId = group.StepGroupId,
+            //         RoleId = group.RoleId,
+            //         StepGroupName = group.StepGroupName,
+            //         StepGroupDescription = group.StepGroupDescription,
+            //         TutorialSteps = steps
+            //     });
+            //
+            //     return result;
+            // }
+            return activeGroups.Select(group => new ActiveTutorialGroupWithSteps
+            {
+                StepGroupId = group.StepGroupId,
+                RoleId = group.RoleId,
+                StepGroupName = group.StepGroupName,
+                StepGroupDescription = group.StepGroupDescription,
+                TutorialSteps = tutorialSteps.Where(ts => ts.StepGroupName == group.StepGroupName).ToList()
+            }).ToList();
         }
     }
 }

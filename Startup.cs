@@ -1,9 +1,11 @@
+using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using tutorial_backend_dotnet.Data;
 using tutorial_backend_dotnet.Repositories;
 
@@ -27,9 +29,34 @@ namespace tutorial_backend_dotnet
             services.AddScoped<ITutorialStepRepository, TutorialStepRepository>();
             services.AddScoped<IUserTutorialProgressRepository, UserTutorialProgressRepository>();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularApp",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
             services.AddControllers();
 
             services.AddSwaggerGen();
+            
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = "YourIssuer", // Replace with your issuer
+                        ValidAudience = "YourAudience", // Replace with your audience
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourSecretKey")) // Replace with your secret key
+                    };
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -41,14 +68,16 @@ namespace tutorial_backend_dotnet
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
+                // app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+            app.UseCors("AllowAngularApp");
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
