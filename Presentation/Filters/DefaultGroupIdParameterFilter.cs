@@ -2,9 +2,9 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace tutorial_backend_dotnet.Filters
+namespace tutorial_backend_dotnet.Presentation.Filters
 {
-    public class DefaultGroupIdParameterFilter: IParameterFilter
+    public class DefaultGroupIdParameterFilter : IParameterFilter
     {
         public void Apply(OpenApiParameter parameter, ParameterFilterContext context)
         {

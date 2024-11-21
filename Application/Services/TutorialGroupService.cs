@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using tutorial_backend_dotnet.Application.Interfaces;
 using tutorial_backend_dotnet.Domain.Dtos;
-using tutorial_backend_dotnet.Domain.Entities;
 
 namespace tutorial_backend_dotnet.Application.Services
 {

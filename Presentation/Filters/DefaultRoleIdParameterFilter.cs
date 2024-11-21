@@ -1,15 +1,16 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace tutorial_backend_dotnet.Filters
+namespace tutorial_backend_dotnet.Presentation.Filters
 {
-    public class DefaultRoleIdParameterFilter: IParameterFilter
+    public class DefaultRoleIdParameterFilter : IParameterFilter
     {
         public void Apply(OpenApiParameter parameter, ParameterFilterContext context)
         {
             if (parameter.Name == "roleId" && parameter.Schema.Type == "integer")
             {
-                parameter.Schema.Default = new Microsoft.OpenApi.Any.OpenApiInteger(1);
+                parameter.Schema.Default = new OpenApiInteger(1);
             }
         }
     }

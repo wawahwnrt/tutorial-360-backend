@@ -1,5 +1,9 @@
-﻿public class UserTutorialRoleDto
+﻿namespace tutorial_backend_dotnet.Domain.Dtos
 {
-    public int RoleId { get; set; }
-    public string RoleName { get; set; }
+    public class UserTutorialRoleDto
+    {
+        public int RoleId { get; set; }
+
+        public string? RoleName { get; set; }
+    }
 }

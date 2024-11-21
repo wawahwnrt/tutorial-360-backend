@@ -1,21 +1,21 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using tutorial_backend_dotnet.Infrastructure.Data;
 
 namespace tutorial_backend_dotnet.Infrastructure.Repositories
 {
     public class BaseRepository<T> where T : class
     {
-        protected readonly AppDbContext _context;
-        protected readonly DbSet<T> _dbSet;
+        protected readonly AppDbContext Context;
+        protected readonly DbSet<T> DbSet;
 
         public BaseRepository(AppDbContext context)
         {
-            _context = context;
-            _dbSet = context.Set<T>();
-            if (_dbSet == null)
+            Context = context;
+            DbSet = context.Set<T>();
+            if (DbSet == null)
             {
                 throw new InvalidOperationException($"No DbSet for type {typeof(T).Name} found in AppDbContext.");
             }
@@ -23,32 +23,32 @@ namespace tutorial_backend_dotnet.Infrastructure.Repositories
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await _dbSet.ToListAsync();
+            return await DbSet.ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(object id)
         {
-            return await _dbSet.FindAsync(id);
+            return await DbSet.FindAsync(id);
         }
 
         public async Task AddAsync(T entity)
         {
-            await _dbSet.AddAsync(entity);
+            await DbSet.AddAsync(entity);
         }
 
         public void Update(T entity)
         {
-            _dbSet.Update(entity);
+            DbSet.Update(entity);
         }
 
         public void Delete(T entity)
         {
-            _dbSet.Remove(entity);
+            DbSet.Remove(entity);
         }
 
         public async Task SaveChangesAsync()
         {
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
         }
     }
 }

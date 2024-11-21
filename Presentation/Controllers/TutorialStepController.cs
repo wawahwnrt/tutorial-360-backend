@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using tutorial_backend_dotnet.Application.Interfaces;
 using tutorial_backend_dotnet.Domain.Dtos;
-using tutorial_backend_dotnet.Models;
-using tutorial_backend_dotnet.Utils;
 
 namespace tutorial_backend_dotnet.Presentation.Controllers
 {
@@ -20,7 +18,7 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
         }
 
         /// <summary>
-        /// Retrieves all tutorial steps for a specific group.
+        ///     Retrieves all tutorial steps for a specific group.
         /// </summary>
         /// <param name="groupId">Group identifier.</param>
         /// <returns>A list of tutorial steps for the specified group.</returns>
@@ -37,7 +35,7 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
         }
 
         /// <summary>
-        /// Retrieves a specific tutorial step by ID.
+        ///     Retrieves a specific tutorial step by ID.
         /// </summary>
         /// <param name="stepId">Step identifier.</param>
         /// <returns>The tutorial step if found.</returns>
@@ -45,16 +43,6 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
         public async Task<IActionResult> GetStepById(int stepId)
         {
             var step = await _service.GetStepByIdAsync(stepId);
-            if (step == null)
-            {
-                return NotFound(new ApiResponse<string>
-                {
-                    Status = "Error",
-                    Message = $"Tutorial step with ID {stepId} not found.",
-                    Data = null
-                });
-            }
-
             return Ok(new ApiResponse<TutorialStepDto>
             {
                 Status = "Success",
@@ -64,7 +52,7 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
         }
 
         /// <summary>
-        /// Retrieves all active tutorial steps.
+        ///     Retrieves all active tutorial steps.
         /// </summary>
         /// <returns>A list of active tutorial steps.</returns>
         [HttpGet("active")]

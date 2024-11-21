@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using tutorial_backend_dotnet.Application.Interfaces;
 using tutorial_backend_dotnet.Domain.Dtos;
-using tutorial_backend_dotnet.Models;
-using tutorial_backend_dotnet.Utils;
 
 namespace tutorial_backend_dotnet.Presentation.Controllers
 {
@@ -20,7 +18,7 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
         }
 
         /// <summary>
-        /// Retrieves all active tutorial groups.
+        ///     Retrieves all active tutorial groups.
         /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAllActiveGroups()
@@ -35,7 +33,7 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
         }
 
         /// <summary>
-        /// Retrieves tutorial groups associated with a specific role.
+        ///     Retrieves tutorial groups associated with a specific role.
         /// </summary>
         /// <param name="roleId">Role identifier.</param>
         [HttpGet("role/{roleId}")]
@@ -43,11 +41,10 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
         {
             if (roleId <= 0)
             {
-                return BadRequest(new ApiResponse<string>
+                return BadRequest(new ApiResponse<string?>
                 {
                     Status = "Error",
-                    Message = "Invalid role ID.",
-                    Data = null
+                    Message = "Invalid role ID."
                 });
             }
 
@@ -61,7 +58,7 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
         }
 
         /// <summary>
-        /// Retrieves a specific tutorial group with its steps.
+        ///     Retrieves a specific tutorial group with its steps.
         /// </summary>
         /// <param name="groupId">Group identifier.</param>
         [HttpGet("{groupId}")]
@@ -69,25 +66,14 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
         {
             if (groupId <= 0)
             {
-                return BadRequest(new ApiResponse<string>
+                return BadRequest(new ApiResponse<string?>
                 {
                     Status = "Error",
-                    Message = "Invalid group ID.",
-                    Data = null
+                    Message = "Invalid group ID."
                 });
             }
 
             var group = await _service.GetGroupWithStepsAsync(groupId);
-            if (group == null)
-            {
-                return NotFound(new ApiResponse<TutorialGroupDto>
-                {
-                    Status = "Error",
-                    Message = $"Tutorial group with ID {groupId} not found.",
-                    Data = null
-                });
-            }
-
             return Ok(new ApiResponse<TutorialGroupDto>
             {
                 Status = "Success",

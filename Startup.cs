@@ -9,9 +9,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using tutorial_backend_dotnet.Application.Interfaces;
 using tutorial_backend_dotnet.Application.Services;
-using tutorial_backend_dotnet.Filters;
 using tutorial_backend_dotnet.Infrastructure.Data;
 using tutorial_backend_dotnet.Infrastructure.Repositories;
+using tutorial_backend_dotnet.Presentation.Filters;
 
 namespace tutorial_backend_dotnet
 {
@@ -28,8 +28,8 @@ namespace tutorial_backend_dotnet
         {
             // Add DbContext with PostgreSQL
             services.AddDbContext<AppDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"), 
-                    npgsqlOptions => 
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"),
+                    npgsqlOptions =>
                     {
                         // Optional: Enable advanced PostgreSQL features
                         npgsqlOptions.EnableRetryOnFailure(5); // Retry up to 5 times
@@ -57,9 +57,9 @@ namespace tutorial_backend_dotnet
             // Configure Swagger
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo 
-                { 
-                    Title = "Tutorial API", 
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Tutorial API",
                     Version = "v1",
                     Description = "API for managing tutorial groups and steps"
                 });

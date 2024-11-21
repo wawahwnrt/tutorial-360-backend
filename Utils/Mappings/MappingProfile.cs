@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using AutoMapper;
 using tutorial_backend_dotnet.Domain.Dtos;
 using tutorial_backend_dotnet.Domain.Entities;
@@ -20,14 +19,13 @@ namespace tutorial_backend_dotnet.Utils.Mappings
 
             // Map TutorialGroup to TutorialGroupDto
             CreateMap<TutorialGroup, TutorialGroupDto>()
-                .ForMember(dest => dest.RoleIds, opt => opt.MapFrom(src => src.TutorialGroupRoles != null
-                    ? src.TutorialGroupRoles.Select(role => new UserTutorialRoleDto
-                    {
-                        RoleId = role.RoleId,
-                        RoleName = role.UserTutorialRole.RoleName ?? "Unknown"
-                    })
-                    : new List<UserTutorialRoleDto>())) // Default to an empty list if null
-                .ForMember(dest => dest.TutorialSteps, opt => opt.MapFrom(src => src.TutorialSteps ?? new List<TutorialStep>()));
+                .ForMember(dest => dest.RoleIds, opt => opt.MapFrom(src => src.TutorialGroupRoles.Select(role => new UserTutorialRoleDto
+                {
+                    RoleId = role.RoleId,
+                    RoleName = role.UserTutorialRole.RoleName
+                }))) // Default to an empty list if null
+                .ForMember(dest => dest.TutorialSteps,
+                    opt => opt.MapFrom(src => src.TutorialSteps));
 
             // Map TutorialStep to TutorialStepDto
             CreateMap<TutorialStep, TutorialStepDto>();
@@ -38,8 +36,9 @@ namespace tutorial_backend_dotnet.Utils.Mappings
                 .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.RoleId))
                 .ForMember(dest => dest.StepId, opt => opt.MapFrom(src => src.StepId))
                 .ForMember(dest => dest.StepGroupId, opt => opt.MapFrom(src => src.StepGroupId))
-                .ForMember(dest => dest.StepGroupName, opt => opt.MapFrom(src => src.StepGroupName))
+                .ForMember(dest => dest.StepGroupName, opt => opt.MapFrom(src => src.StepGroupName ?? null))
                 .ForMember(dest => dest.CompletedAt, opt => opt.MapFrom(src => src.CompletedAt))
+                .ForMember(dest => dest.IsReset, opt => opt.MapFrom(src => src.IsReset))
                 .ReverseMap();
         }
     }

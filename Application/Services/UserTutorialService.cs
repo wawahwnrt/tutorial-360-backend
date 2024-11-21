@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -11,11 +12,16 @@ namespace tutorial_backend_dotnet.Application.Services
     public class UserTutorialService : IUserTutorialService
     {
         private readonly IUserTutorialProgressRepository _repository;
+        private readonly ITutorialGroupRepository _tutorialGroupRepository;
         private readonly IMapper _mapper;
 
-        public UserTutorialService(IUserTutorialProgressRepository repository, IMapper mapper)
+        public UserTutorialService(
+            IUserTutorialProgressRepository repository,
+            ITutorialGroupRepository tutorialGroupRepository,
+            IMapper mapper)
         {
             _repository = repository;
+            _tutorialGroupRepository = tutorialGroupRepository;
             _mapper = mapper;
         }
 
@@ -23,30 +29,59 @@ namespace tutorial_backend_dotnet.Application.Services
         public async Task<IEnumerable<UserTutorialProgressDto>> GetUserProgressAsync(int userId)
         {
             var progress = await _repository.GetUserProgressAsync(userId);
-
-            // Handle the case where the repository returns null
-            if (progress == null)
-                return Enumerable.Empty<UserTutorialProgressDto>();
-
             return _mapper.Map<IEnumerable<UserTutorialProgressDto>>(progress);
+        }
+
+        public async Task<UserTutorialProgressDto> GetUserLastCompletedStepAsync(int userId, int roleId)
+        {
+            var progress = await _repository.GetUserLastCompletedStepAsync(userId, roleId);
+            return _mapper.Map<UserTutorialProgressDto>(progress);
         }
 
         // Marks a tutorial as completed
         public async Task<bool> CompleteTutorialAsync(int userId, IEnumerable<UserTutorialProgressDto> tutorialProgress)
         {
-            if (tutorialProgress == null || !tutorialProgress.Any())
-                return false; // Return false if there is no progress to process
-
-            // Map DTOs to entities
-            var entities = _mapper.Map<IEnumerable<UserCompletedTutorial>>(tutorialProgress);
-
-            // Assign the userId to each entity
-            foreach (var entity in entities)
+            if (!tutorialProgress.Any())
             {
-                entity.UserId = userId;
+                return false;
             }
 
-            // Save the completed tutorials
+            var entities = _mapper.Map<IEnumerable<UserCompletedTutorial>>(tutorialProgress)
+                .Select(entity =>
+                {
+                    entity.UserId = userId;
+                    if (entity.CompletedAt == DateTime.MinValue)
+                    {
+                        entity.CompletedAt = DateTime.Now;
+                    }
+                    entity.IsReset = false;
+
+                    return entity;
+                }).ToList();
+
+            // Fetch active groups and create a dictionary for fast lookup
+            var activeGroups = await _tutorialGroupRepository.GetAllActiveGroupsAsync();
+            var tutorialGroups = activeGroups.ToList();
+            var activeGroupsLookup = tutorialGroups.ToDictionary(
+                group => group.StepGroupId,
+                group => group.TutorialGroupRoles.Select(r => r.RoleId).ToHashSet()
+            );
+
+            foreach (var entity in entities)
+            {
+                if (!activeGroupsLookup.TryGetValue(entity.StepGroupId, out var roleIds) ||
+                    !roleIds.Contains(entity.RoleId))
+                {
+                    continue;
+                }
+
+                var stepGroup = tutorialGroups.FirstOrDefault(g => g.StepGroupId == entity.StepGroupId);
+                if (stepGroup != null)
+                {
+                    entity.StepGroupName = stepGroup.StepGroupName;
+                }
+            }
+
             return await _repository.MarkTutorialsAsCompletedAsync(entities);
         }
 
@@ -61,11 +96,6 @@ namespace tutorial_backend_dotnet.Application.Services
         public async Task<IEnumerable<UserTutorialProgressDto>> GetCompletedTutorialsByUserAsync(int userId, int roleId)
         {
             var progress = await _repository.GetUserProgressAsync(userId);
-
-            // Handle null progress and filter by role
-            if (progress == null)
-                return Enumerable.Empty<UserTutorialProgressDto>();
-
             var filteredProgress = progress
                 .Where(p => p.RoleId == roleId) // Filter by role
                 .ToList();
