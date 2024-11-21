@@ -1,5 +1,21 @@
+# IDE and editor settings
+.idea/
+*.iml
 
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
+# Build and output folders
+bin/
+obj/
+publish/
+
+# Logs and temporary files
+*.log
+
+# AWS CLI and Elastic Beanstalk temp files
+.elasticbeanstalk/*.env.yml
+AWSCLIV2.pkg
+
+# User-specific files
+*.user
+
+# Misc
+postgres.sql (optional: move to /docs if still needed)
