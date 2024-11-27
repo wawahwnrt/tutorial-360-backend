@@ -25,5 +25,12 @@ namespace tutorial_backend_dotnet.Application.Interfaces
         /// <param name="groupId">Group identifier.</param>
         /// <returns>The tutorial group with its associated steps, or null if not found.</returns>
         Task<TutorialGroup> GetGroupWithStepsAsync(int groupId);
+        
+        /// <summary>
+        ///     Retrieves all active tutorial steps for a specific role.
+        /// </summary>
+        ///     <param name="roleId">Role identifier.</param>
+        /// <returns>A list of active tutorial steps for the specified role.</returns>
+        Task<IEnumerable<TutorialStep>> GetActiveStepsByRoleAsync(int roleId);
     }
 }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace tutorial_backend_dotnet.Domain.Entities
 {
-    [Table("tutorial_group_roles")]
+    [Table("TUTORIAL_GROUP_ROLES")]
     public class TutorialGroupRole
     {
         [Key]

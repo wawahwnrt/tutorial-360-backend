@@ -7,7 +7,7 @@ using tutorial_backend_dotnet.Domain.Dtos;
 namespace tutorial_backend_dotnet.Presentation.Controllers
 {
     [ApiController]
-    [Route("api/tutorial-groups")]
+    [Route("api/v1/360-tutorial/tutorial-groups")]
     public class TutorialGroupController : ControllerBase
     {
         private readonly ITutorialGroupService _service;
@@ -41,7 +41,7 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
         {
             if (roleId <= 0)
             {
-                return BadRequest(new ApiResponse<string?>
+                return Ok(new ApiResponse<string?>
                 {
                     Status = "Error",
                     Message = "Invalid role ID."
@@ -66,7 +66,7 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
         {
             if (groupId <= 0)
             {
-                return BadRequest(new ApiResponse<string?>
+                return Ok(new ApiResponse<string?>
                 {
                     Status = "Error",
                     Message = "Invalid group ID."

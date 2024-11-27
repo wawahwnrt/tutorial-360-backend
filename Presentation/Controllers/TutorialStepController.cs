@@ -7,14 +7,18 @@ using tutorial_backend_dotnet.Domain.Dtos;
 namespace tutorial_backend_dotnet.Presentation.Controllers
 {
     [ApiController]
-    [Route("api/tutorial-steps")]
+    [Route("api/v1/360-tutorial/tutorial-steps")]
     public class TutorialStepController : ControllerBase
     {
         private readonly ITutorialStepService _service;
+        private readonly ITutorialGroupService _groupService;
 
-        public TutorialStepController(ITutorialStepService service)
+        public TutorialStepController(
+            ITutorialStepService service,
+            ITutorialGroupService groupService)
         {
             _service = service;
+            _groupService = groupService;
         }
 
         /// <summary>
@@ -63,6 +67,24 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
             {
                 Status = "Success",
                 Message = "Active tutorial steps retrieved successfully.",
+                Data = steps
+            });
+        }
+        
+        /// <summary>
+        ///     Retrieves all active tutorial steps for a specific role.
+        ///     This endpoint is used to fetch steps that are available to a specific user role.
+        /// </summary>
+        /// <param name="roleId">Role identifier.</param>
+        /// <returns>A list of active tutorial steps for the specified role.</returns>
+        [HttpGet("active/role/{roleId}")]
+        public async Task<IActionResult> GetActiveStepsByRole(int roleId)
+        {
+            var steps = await _groupService.GetActiveStepsByRoleAsync(roleId);
+            return Ok(new ApiResponse<IEnumerable<TutorialStepDto>>
+            {
+                Status = "Success",
+                Message = "Active tutorial steps retrieved successfully for role with ID: ${roleId}.",  
                 Data = steps
             });
         }

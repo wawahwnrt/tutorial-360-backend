@@ -34,5 +34,11 @@ namespace tutorial_backend_dotnet.Application.Services
             var groups = await _repository.GetGroupsByRoleAsync(roleId);
             return _mapper.Map<IEnumerable<TutorialGroupDto>>(groups);
         }
+
+        public async Task<IEnumerable<TutorialStepDto>> GetActiveStepsByRoleAsync(int roleId)
+        {
+            var steps = await _repository.GetActiveStepsByRoleAsync(roleId);
+            return _mapper.Map<IEnumerable<TutorialStepDto>>(steps);
+        }
     }
 }

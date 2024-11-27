@@ -15,12 +15,12 @@ namespace tutorial_backend_dotnet.Infrastructure.Data
 
             // TutorialGroupRole Entity
             modelBuilder.Entity<TutorialGroupRole>()
-                .ToTable("tutorial_group_roles") // Matches table name in PostgreSQL
+                .ToTable("TUTORIAL_GROUP_ROLES") // Matches table name in PostgreSQL
                 .HasKey(tgr => new { tgr.StepGroupId, tgr.RoleId });
 
             // TutorialGroup Entity
             modelBuilder.Entity<TutorialGroup>()
-                .ToTable("tutorial_group") // Matches table name in PostgreSQL
+                .ToTable("TUTORIAL_GROUP") // Matches table name in PostgreSQL
                 .HasKey(t => t.StepGroupId);
 
             modelBuilder.Entity<TutorialGroup>()
@@ -31,7 +31,7 @@ namespace tutorial_backend_dotnet.Infrastructure.Data
 
             // TutorialStep Entity
             modelBuilder.Entity<TutorialStep>()
-                .ToTable("tutorial_step") // Matches table name in PostgreSQL
+                .ToTable("TUTORIAL_STEP") // Matches table name in PostgreSQL
                 .HasKey(t => t.StepId);
 
             modelBuilder.Entity<TutorialStep>()
@@ -41,7 +41,7 @@ namespace tutorial_backend_dotnet.Infrastructure.Data
 
             // UserCompletedTutorial Entity
             modelBuilder.Entity<UserCompletedTutorial>()
-                .ToTable("user_completed_tutorial") // Matches table name in PostgreSQL
+                .ToTable("USER_COMPLETED_TUTORIAL") // Matches table name in PostgreSQL
                 .HasKey(uct => new { uct.UserId, uct.StepId, uct.StepGroupId });
 
             modelBuilder.Entity<UserCompletedTutorial>()

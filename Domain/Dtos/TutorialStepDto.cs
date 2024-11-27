@@ -7,8 +7,10 @@ namespace tutorial_backend_dotnet.Domain.Dtos
         public int StepId { get; set; }
 
         public int StepGroupId { get; set; } // Ensure this aligns with the schema
+        
+        public string StepAnchor { get; set; }
 
-        public string StepName { get; set; }
+        public string StepTitle { get; set; }
 
         public string StepDescription { get; set; }
 

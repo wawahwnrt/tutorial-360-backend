@@ -8,7 +8,7 @@ using tutorial_backend_dotnet.Domain.Dtos;
 namespace tutorial_backend_dotnet.Presentation.Controllers
 {
     [ApiController]
-    [Route("api/user-progress")]
+    [Route("api/v1/360-tutorial/user-progress")]
     public class UserTutorialProgressController : ControllerBase
     {
         private readonly IUserTutorialService _service;
@@ -36,7 +36,7 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
                 });
             }
             
-            return NotFound(new ApiResponse<string?>
+            return Ok(new ApiResponse<string?>
             {
                 Status = "Error",
                 Message = "No progress found for the specified user."
@@ -54,7 +54,7 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
         {
             if (userId <= 0 || roleId <= 0)
             {
-                return BadRequest(new ApiResponse<string?>
+                return Ok(new ApiResponse<string?>
                 {
                     Status = "Error",
                     Message = "Invalid user ID or role ID."
@@ -73,7 +73,7 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
                 });
             }
             
-            return NotFound(new ApiResponse<string?>
+            return Ok(new ApiResponse<string?>
             {
                 Status = "Error",
                 Message = "No completed tutorials found for the specified user and role."
@@ -98,7 +98,7 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
                 });
             }
 
-            return BadRequest(new ApiResponse<string?>
+            return Ok(new ApiResponse<string?>
             {
                 Status = "Error",
                 Message = "Failed to mark tutorial as completed."
@@ -115,7 +115,7 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
         {
             if (userId <= 0)
             {
-                return BadRequest(new ApiResponse<string?>
+                return Ok(new ApiResponse<string?>
                 {
                     Status = "Error",
                     Message = "Invalid user ID."
@@ -142,7 +142,7 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
         {
             if (userId <= 0 || groupId <= 0)
             {
-                return BadRequest(new ApiResponse<string?>
+                return Ok(new ApiResponse<string?>
                 {
                     Status = "Error",
                     Message = "Invalid user ID or group ID."
@@ -172,7 +172,7 @@ namespace tutorial_backend_dotnet.Presentation.Controllers
             var progress = await _service.GetUserLastCompletedStepAsync(userId, roleId);
             if (progress.Equals(null))
             {
-                return NotFound(new ApiResponse<string?>
+                return Ok(new ApiResponse<string?>
                 {
                     Status = "Error",
                     Message = "No progress found for the specified user and role."

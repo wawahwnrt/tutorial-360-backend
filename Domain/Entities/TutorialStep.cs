@@ -11,8 +11,10 @@ namespace tutorial_backend_dotnet.Domain.Entities
         [Column("step_group_id")] public int StepGroupId { get; set; }
 
         [Column("step_group_name")] public string StepGroupName { get; set; }
+        
+        [Column("step_anchor")] public string StepAnchor { get; set; }
 
-        [Column("step_name")] public string StepName { get; set; }
+        [Column("step_title")] public string StepTitle { get; set; }
 
         [Column("step_description")] public string StepDescription { get; set; }
 
