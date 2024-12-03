@@ -28,6 +28,7 @@ namespace tutorial_backend_dotnet
         {
             // Add DbContext with PostgreSQL
             services.AddDbContext<AppDbContext>(options =>
+                //    "DefaultConnection": "Host=183.90.170.102;database=siteview;Username=postgres;password=Sr5BVN@4csr6Tg^2!7fj;Port=15432"
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"),
                     npgsqlOptions =>
                     {
@@ -50,6 +51,18 @@ namespace tutorial_backend_dotnet
             services.AddScoped<ITutorialGroupService, TutorialGroupService>();
             services.AddScoped<ITutorialStepService, TutorialStepService>();
             services.AddScoped<IUserTutorialService, UserTutorialService>();
+            
+            // Add CORS configuration
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularApp", builder =>
+                {
+                    builder.WithOrigins("http://localhost:4200") // Angular dev server
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials(); // Allow cookies if needed
+                });
+            });
 
             // Add Controllers
             services.AddControllers();
@@ -87,6 +100,7 @@ namespace tutorial_backend_dotnet
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Tutorial API v1");
             });
+            app.UseCors("AllowAngularApp");
 
             app.UseRouting();
             app.UseEndpoints(endpoints =>

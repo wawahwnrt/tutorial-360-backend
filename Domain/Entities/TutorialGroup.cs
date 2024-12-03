@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace tutorial_backend_dotnet.Domain.Entities
 {
-    [Table("tutorial_group")]
+    [Table("TUTORIAL_GROUP")]
     public class TutorialGroup
     {
         [Key] [Column("step_group_id")] public int StepGroupId { get; set; }

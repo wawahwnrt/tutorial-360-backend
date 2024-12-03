@@ -46,5 +46,12 @@ namespace tutorial_backend_dotnet.Infrastructure.Repositories
                 .ThenInclude(role => role.UserTutorialRole) // Include nested navigation property
                 .FirstOrDefaultAsync(group => group.StepGroupId == groupId && group.IsActive);
         }
+        
+        public async Task<IEnumerable<TutorialStep>> GetActiveStepsByRoleAsync(int roleId)
+        {
+            // Fetches all steps associated with a specific role
+            var groups = await GetGroupsByRoleAsync(roleId);
+            return groups.SelectMany(group => group.TutorialSteps).Where(step => step.IsActive);
+        }
     }
 }

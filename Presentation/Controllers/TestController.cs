@@ -5,7 +5,7 @@ using Npgsql;
 namespace tutorial_backend_dotnet.Presentation.Controllers
 {
     [ApiController]
-    [Route("test")]
+    [Route("api/v1/360-tutorial")]
     public class TestController : ControllerBase
     {
         [HttpGet("test-connection")]
