@@ -17,6 +17,8 @@ namespace tutorial_backend_dotnet.Domain.Dtos
         public string StepPage { get; set; }
 
         public int StepOrder { get; set; }
+        
+        public bool IsRequiredAction { get; set; }
 
         public bool IsActive { get; set; }
 

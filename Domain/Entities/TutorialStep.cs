@@ -21,6 +21,8 @@ namespace tutorial_backend_dotnet.Domain.Entities
         [Column("step_page")] public string StepPage { get; set; }
 
         [Column("step_order")] public int StepOrder { get; set; }
+        
+        [Column("is_required_action")] public bool IsRequiredAction { get; set; }
 
         [Column("is_active")] public bool IsActive { get; set; }
 
